@@ -47,11 +47,13 @@ const createWindow = () => {
         }
     });
     win.removeMenu();
+    win.maximize();
     win.setFullScreen(settings.get('Fullscreen'));
 
     globalShortcut.register('F6', () => win.loadURL('https://venge.io/'));
     globalShortcut.register('Escape', () => win.webContents.executeJavaScript('document.exitPointerLock()', true));
     globalShortcut.register('F7', () => win.webContents.toggleDevTools());
+    globalShortcut.register('F11', () => {win.fullScreen = !win.fullScreen; settings.set('Fullscreen', win.fullScreen)});
 
     //Auto Update
 

@@ -4,8 +4,6 @@ const settings = new Store();
 
 window.onload = function() {
     app.settingsTabs.push({ name: 'Client', icon: 'fa-desktop', tab: 'Client' });
-
-    app.customSettings.push({ name: 'Fullscreen', type: 'checkbox', value: true, tab: 'Client' });
     app.customSettings.push({ name: 'Cap FPS', type: 'checkbox', value: false, tab: 'Client' });
 
     
