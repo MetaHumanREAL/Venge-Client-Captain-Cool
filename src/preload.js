@@ -31,5 +31,5 @@ ipcRenderer.on('scriptsLoaded', (event, hasScripts) => {
 });
 
 window.onload = function() {
-    
-}
+
+};
