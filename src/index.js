@@ -1,5 +1,7 @@
-const { app, BrowserWindow, globalShortcut, protocol, ipcMain } = require('electron')
+const { app, BrowserWindow, globalShortcut, protocol, ipcMain } = require('electron');
+app.startedAt = Date.now();
 const path = require('path');
+const official_settings = ['Unlimited FPS'];
 
 //auto update
 const { autoUpdater } = require("electron-updater")
@@ -21,17 +23,18 @@ const swapper = require('./swapper.js');
 const DiscordRPC = require('discord-rpc');
 const clientId = '727533470594760785';
 const RPC = new DiscordRPC.Client({ transport: 'ipc' });
+RPC.login({ clientId }).catch(console.error);
 DiscordRPC.register(clientId);
-const rpc_script = require('./rpc.js')
+const rpc_script = require('./rpc.js');
 
 
 //Uncap FPS
-if (settings.get('cap FPS') === undefined) settings.set('cap FPS', false)
-
-if (!settings.get('cap FPS')) {
+if (settings.get('Unlimited FPS') === undefined) settings.set('Unlimited FPS', true);
+if (settings.get('Unlimited FPS')) {
     app.commandLine.appendSwitch('disable-frame-rate-limit');
     app.commandLine.appendSwitch('disable-gpu-vsync');
 }
+
 
 //main Client Code
 const createWindow = () => {
@@ -85,12 +88,15 @@ const createWindow = () => {
         }
     });
 
-    win.loadURL('https://venge.io/')
+    win.loadURL('https://venge.io/');
 
     //Swapper
 
-    swapper.runScripts(win, app);
-    swapper.replaceResources(win, app)
+    ipcMain.on('loadScripts', function(event) {
+        swapper.runScripts(win, app);
+        event.sender.send('scriptsLoaded', true);
+    });
+    swapper.replaceResources(win, app);
 
     //Discord RPC
 
@@ -129,7 +135,15 @@ const createWindow = () => {
             });
         }
     });
+
+    ipcMain.on('settingChange', function(event, setting) {
+        if (official_settings.includes(setting.name)) {
+            settings.set(setting.name, setting.value);
+            if(setting.name == 'Unlimited FPS') {app.exit(); app.relaunch();}
+        }
+    });
 }
+
 
 app.whenReady().then(() => {
     protocol.registerFileProtocol('swap', (request, callback) => {

@@ -18,6 +18,7 @@ module.exports = {
         if(files.length == 0) return;
     
         files.forEach(file => {
+            if(!file.name.includes('js')) return;
             let script = fs.readFileSync(scriptDirectory + '/' + file.name, { encoding: 'utf-8' });
             win.webContents.executeJavaScript(script);
         });
@@ -31,7 +32,7 @@ module.exports = {
             return folder;
         }
 
-        checkCreateFolder(app.getPath('documents') + "\\Venge-Client\\Swapper\\");
+        checkCreateFolder(app.getPath('documents') + "\\Venge-Client\\Resource Swapper\\");
         checkCreateFolder(app.getPath('documents') + "\\Venge-Client\\Scripts\\");
 
         const AdBlockList = [
@@ -44,7 +45,7 @@ module.exports = {
             'adclick.g.doubleclick.net'
         ]
     
-        let swapDirectory = path.normalize(`${app.getPath('documents')}/Venge-Client/Swapper`)
+        let swapDirectory = path.normalize(`${app.getPath('documents')}/Venge-Client/Resource Swapper`)
         
         if(!fs.existsSync(swapDirectory)) {
             fs.mkdirSync(swapDirectory, {
