@@ -8,7 +8,8 @@ window.onload = function() {
 
     
     pc.app.on('Client:CustomSettingsChange', function(setting){
-        settings.set(setting.name, setting.value);
-        console.log()
+        if (setting.tab == "Client") {
+            settings.set(setting.name, setting.value);
+        }
     });
 };
